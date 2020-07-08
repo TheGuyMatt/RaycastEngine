@@ -1,4 +1,5 @@
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_render.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,12 +11,48 @@ SDL_Renderer *renderer;
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 512
 
+//player things
 float px, py; //player position
 void draw_player()
 {
   SDL_Rect rect = {px, py, 8, 8};
   SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
   SDL_RenderFillRect(renderer, &rect);
+}
+
+//map things
+const int mapX = 8, mapY = 8, mapS = 64;
+int debugnum = 0;
+int map[] =
+{
+  1,1,1,1,1,1,1,1,
+  1,0,1,0,0,0,0,1,
+  1,0,1,0,0,1,0,1,
+  1,0,1,0,0,0,0,1,
+  1,0,0,0,0,0,0,1,
+  1,0,0,0,0,1,0,1,
+  1,0,0,0,0,0,0,1,
+  1,1,1,1,1,1,1,1,
+};
+void draw_map_2D()
+{
+  for (int y = 0; y < mapY; y++)
+  {
+    for (int x = 0; x < mapX - debugnum; x++)
+    {
+      //set color to white if cube is there
+      if (map[y * mapX + x] == 1) SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+      else SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+      int xo = x * mapS, yo = y * mapS;
+      SDL_Rect rect;
+      rect.x = xo;
+      rect.y = yo;
+      rect.w = xo + mapS;
+      rect.h = yo + mapS;
+      SDL_RenderFillRect(renderer, &rect);
+    }
+  }
 }
 
 int process_events(SDL_Event *event)
@@ -47,6 +84,12 @@ int process_events(SDL_Event *event)
           case SDLK_s:
             py += 5;
             break;
+          case SDLK_LEFT:
+            debugnum++;
+            break;
+          case SDLK_RIGHT:
+            debugnum--;
+            break;
         }
         break;
     }
@@ -63,10 +106,11 @@ void update()
 void render(SDL_Renderer *renderer)
 {
   //clear screen
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+  SDL_SetRenderDrawColor(renderer, 155, 155, 155, 255);
   SDL_RenderClear(renderer);
 
   //draw
+  draw_map_2D();
   draw_player();
     
   //present
