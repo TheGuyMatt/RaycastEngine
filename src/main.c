@@ -19,7 +19,7 @@ void draw_player()
   SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
   SDL_RenderFillRect(renderer, &rect);
 
-  SDL_RenderDrawLineF(renderer, px + 3, py + 3, px + pdx * 5, py + pdy * 5);
+  SDL_RenderDrawLineF(renderer, px, py, px + pdx * 5, py + pdy * 5);
 }
 
 //map things
@@ -49,6 +49,33 @@ void draw_map_2D()
       SDL_Rect box = {xo + 1, yo + 1, mapS - 2, mapS - 2};
       SDL_RenderFillRect(renderer, &box);
     }
+  }
+}
+
+//draw the rays
+void draw_rays_3D()
+{
+  int r, mx, my, mp, dof;
+  float rx, ry, ra, xo, yo;
+
+  ra = pa;
+  for (r = 0; r < 1; r++)
+  {
+    //check horizontal
+    dof = 0;
+    float aTan = -1/tan(ra);
+    if (ra > PI) { ry = (((int)py>>6)<<6)-0.0001; rx = (py-ry) * aTan + px; yo = -64; xo = -yo * aTan; } //looking up
+    if (ra < PI) { ry = (((int)py>>6)<<6)+64; rx = (py-ry) * aTan + px; yo = 64; xo = -yo * aTan; } //looking down
+    if (ra == 0 || ra == PI) { rx = px; ry = py; dof = 8; } //looking straight left or right
+    while (dof < 8)
+    {
+      mx = (int) (rx)>>6; my = (int) (ry)>>6; mp=my*mapX+mx;
+      if (mp < mapX * mapY && map[mp] == 1) dof = 8; //hit wall
+      else { rx+=xo; ry+=yo; dof+= 1; } //next line
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_RenderDrawLineF(renderer, px, py, rx, ry);
   }
 }
 
@@ -110,6 +137,7 @@ void render(SDL_Renderer *renderer)
 
   //draw
   draw_map_2D();
+  draw_rays_3D();
   draw_player();
     
   //present
