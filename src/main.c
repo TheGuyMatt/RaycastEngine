@@ -3,8 +3,36 @@
 
 #include <SDL2/SDL.h>
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 512
+
+int process_events(SDL_Event *event)
+{
+  while(SDL_PollEvent(event))
+  {
+    //return 0 if we want to quit
+    if (event->type == SDL_QUIT) return 0;
+  }
+
+  //this makes sure the game stays running
+  return 1;
+}
+
+void update()
+{
+}
+
+void render(SDL_Renderer *renderer)
+{
+  //clear screen
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+  SDL_RenderClear(renderer);
+
+  //draw
+    
+  //present
+  SDL_RenderPresent(renderer);
+}
 
 int main()
 {
@@ -22,19 +50,13 @@ int main()
   while (running)
   {
     //process events
-    while(SDL_PollEvent(&event))
-    {
-      if (event.type == SDL_QUIT) running = 0;
-    }
+    running = process_events(&event);
 
-    //clear screen
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_RenderClear(renderer);
+    //update the game
+    update();
 
-    //draw
-    
-    //present
-    SDL_RenderPresent(renderer);
+    //draw the game
+    render(renderer);
   }
 
   //release resources
