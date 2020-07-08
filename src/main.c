@@ -1,6 +1,3 @@
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_keycode.h>
-#include <SDL2/SDL_render.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -21,8 +18,7 @@ void draw_player()
 }
 
 //map things
-const int mapX = 8, mapY = 8, mapS = 64;
-int debugnum = 0;
+int mapX = 8, mapY = 8, mapS = 64;
 int map[] =
 {
   1,1,1,1,1,1,1,1,
@@ -38,19 +34,15 @@ void draw_map_2D()
 {
   for (int y = 0; y < mapY; y++)
   {
-    for (int x = 0; x < mapX - debugnum; x++)
+    for (int x = 0; x < mapX; x++)
     {
       //set color to white if cube is there
-      if (map[y * mapX + x] == 1) SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-      else SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+      if (map[y * mapX + x] == 1)  { SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); }
+      else { SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); }
 
       int xo = x * mapS, yo = y * mapS;
-      SDL_Rect rect;
-      rect.x = xo;
-      rect.y = yo;
-      rect.w = xo + mapS;
-      rect.h = yo + mapS;
-      SDL_RenderFillRect(renderer, &rect);
+      SDL_Rect box = {xo, yo, mapS, mapS};
+      SDL_RenderFillRect(renderer, &box);
     }
   }
 }
@@ -83,12 +75,6 @@ int process_events(SDL_Event *event)
             break;
           case SDLK_s:
             py += 5;
-            break;
-          case SDLK_LEFT:
-            debugnum++;
-            break;
-          case SDLK_RIGHT:
-            debugnum--;
             break;
         }
         break;
