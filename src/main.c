@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <math.h>
+#define PI 3.1415926535
+
 #include <SDL2/SDL.h>
 
 SDL_Window *window;
@@ -9,12 +12,14 @@ SDL_Renderer *renderer;
 #define WINDOW_HEIGHT 512
 
 //player things
-float px, py; //player position
+float px, py, pdx, pdy, pa; //player position
 void draw_player()
 {
   SDL_Rect rect = {px, py, 8, 8};
   SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
   SDL_RenderFillRect(renderer, &rect);
+
+  SDL_RenderDrawLineF(renderer, px + 3, py + 3, px + pdx * 5, py + pdy * 5);
 }
 
 //map things
@@ -37,11 +42,11 @@ void draw_map_2D()
     for (int x = 0; x < mapX; x++)
     {
       //set color to white if cube is there
-      if (map[y * mapX + x] == 1)  { SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); }
-      else { SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); }
+      if (map[y * mapX + x] == 1)  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+      else SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
       int xo = x * mapS, yo = y * mapS;
-      SDL_Rect box = {xo, yo, mapS, mapS};
+      SDL_Rect box = {xo + 1, yo + 1, mapS - 2, mapS - 2};
       SDL_RenderFillRect(renderer, &box);
     }
   }
@@ -65,16 +70,24 @@ int process_events(SDL_Event *event)
             return 0;
             break;
           case SDLK_a:
-            px -= 5;
+            pa -= 0.1;
+            if (pa < 0) pa += 2 * PI;
+            pdx = cos(pa)*5;
+            pdy = sin(pa)*5;
             break;
           case SDLK_d:
-            px += 5;
+            pa += 0.1;
+            if (pa > 2 * PI) pa -= 2 * PI;
+            pdx = cos(pa)*5;
+            pdy = sin(pa)*5;
             break;
           case SDLK_w:
-            py -= 5;
+            px += pdx;
+            py += pdy;
             break;
           case SDLK_s:
-            py += 5;
+            px -= pdx;
+            py -= pdy;
             break;
         }
         break;
@@ -114,7 +127,7 @@ void init()
   //create renderer
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-  px = 300; py = 300; //init player position
+  px = 300; py = 300; pdx = cos(pa)*5; pdy = sin(pa)*5; //init player position
 }
 
 int main()

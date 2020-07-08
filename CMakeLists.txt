@@ -17,4 +17,4 @@ file(GLOB_RECURSE SRCS "${CMAKE_SOURCE_DIR}/src/*.c")
 
 add_executable(RaycastEngine ${HDRS} ${SRCS})
 
-target_link_libraries(RaycastEngine ${SDL2_LIBS} ${SDL2_IMAGE_LIBRARIES}) 
+target_link_libraries(RaycastEngine ${SDL2_LIBS} ${SDL2_IMAGE_LIBRARIES} m) 
