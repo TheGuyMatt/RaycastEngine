@@ -1,3 +1,4 @@
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +24,32 @@ int process_events(SDL_Event *event)
   {
     //return 0 if we want to quit
     if (event->type == SDL_QUIT) return 0;
+    switch (event->type)
+    {
+      case SDL_QUIT:
+        return 0;
+        break;
+      case SDL_KEYDOWN:
+        switch (event->key.keysym.sym)
+        {
+          case SDLK_ESCAPE:
+            return 0;
+            break;
+          case SDLK_a:
+            px -= 5;
+            break;
+          case SDLK_d:
+            px += 5;
+            break;
+          case SDLK_w:
+            py -= 5;
+            break;
+          case SDLK_s:
+            py += 5;
+            break;
+        }
+        break;
+    }
   }
 
   //this makes sure the game stays running
