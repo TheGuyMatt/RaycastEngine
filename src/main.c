@@ -3,6 +3,8 @@
 
 #include <math.h>
 #define PI 3.1415926535
+#define P2 PI/2
+#define P3 3*PI/2
 
 #include <SDL2/SDL.h>
 
@@ -15,7 +17,7 @@ SDL_Renderer *renderer;
 float px, py, pdx, pdy, pa; //player position
 void draw_player()
 {
-  SDL_Rect rect = {px, py, 8, 8};
+  SDL_Rect rect = {px - 3, py - 3, 8, 8};
   SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
   SDL_RenderFillRect(renderer, &rect);
 
@@ -65,7 +67,7 @@ void draw_rays_3D()
     dof = 0;
     float aTan = -1/tan(ra);
     if (ra > PI) { ry = (((int)py>>6)<<6)-0.0001; rx = (py-ry) * aTan + px; yo = -64; xo = -yo * aTan; } //looking up
-    if (ra < PI) { ry = (((int)py>>6)<<6)+64; rx = (py-ry) * aTan + px; yo = 64; xo = -yo * aTan; } //looking down
+    if (ra < PI) { ry = (((int)py>>6)<<6)+64;     rx = (py-ry) * aTan + px; yo = 64; xo = -yo * aTan; } //looking down
     if (ra == 0 || ra == PI) { rx = px; ry = py; dof = 8; } //looking straight left or right
     while (dof < 8)
     {
@@ -75,6 +77,22 @@ void draw_rays_3D()
     }
 
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_RenderDrawLineF(renderer, px, py, rx, ry);
+
+    //check vertical
+    dof = 0;
+    float nTan = -tan(ra);
+    if (ra > P2 && ra < P3) { rx = (((int)px>>6)<<6)-0.0001; ry = (px-rx) * nTan + py; xo = -64; yo = -xo * nTan; } //looking left
+    if (ra < P2 || ra > P3) { rx = (((int)px>>6)<<6)+64;     ry = (px-rx) * nTan + py; xo = 64; yo = -xo * nTan; } //looking right
+    if (ra == 0 || ra == PI) { rx = px; ry = py; dof = 8; } //looking straight up or down
+    while (dof < 8)
+    {
+      mx = (int) (rx)>>6; my = (int) (ry)>>6; mp=my*mapX+mx;
+      if (mp < mapX * mapY && map[mp] == 1) dof = 8; //hit wall
+      else { rx+=xo; ry+=yo; dof+= 1; } //next line
+    }
+
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderDrawLineF(renderer, px, py, rx, ry);
   }
 }
