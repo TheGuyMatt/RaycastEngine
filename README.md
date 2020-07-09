@@ -16,14 +16,14 @@ Install the SDL2 and SDL2_image headers and libraries using [MacPorts](https://w
 Install the SDL2 headers and libraries using your package manager.
 
 For example, in Arch Linux run:
-
-  sudo pacman -S sdl2 sdl2_image
-
+```
+sudo pacman -S sdl2 sdl2_image
+```
 ## Build Instructions
 Clone this repository:
-
-  git clone https://github.com/TheGuyMatt/RaycastEngine
-
+```
+git clone https://github.com/TheGuyMatt/RaycastEngine
+```
 Build the project:
 ```
 cd RaycastEngine
