@@ -54,6 +54,11 @@ void draw_map_2D()
   }
 }
 
+float dist(float ax, float ay, float bx, float by, float ang)
+{
+  return ( sqrt((bx-ax) * (bx-ax) + (by-ay) * (by - ay)) );
+}
+
 //draw the rays
 void draw_rays_3D()
 {
@@ -72,7 +77,7 @@ void draw_rays_3D()
     while (dof < 8)
     {
       mx = (int) (rx)>>6; my = (int) (ry)>>6; mp=my*mapX+mx;
-      if (mp < mapX * mapY && map[mp] == 1) dof = 8; //hit wall
+      if (mp > 0 && mp < mapX * mapY && map[mp] == 1) dof = 8; //hit wall
       else { rx+=xo; ry+=yo; dof+= 1; } //next line
     }
 
@@ -88,7 +93,7 @@ void draw_rays_3D()
     while (dof < 8)
     {
       mx = (int) (rx)>>6; my = (int) (ry)>>6; mp=my*mapX+mx;
-      if (mp < mapX * mapY && map[mp] == 1) dof = 8; //hit wall
+      if (mp > 0 && mp < mapX * mapY && map[mp] == 1) dof = 8; //hit wall
       else { rx+=xo; ry+=yo; dof+= 1; } //next line
     }
 
