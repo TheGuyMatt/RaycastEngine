@@ -108,6 +108,11 @@ void draw_rays_3D()
     SDL_RenderDrawLineF(renderer, px, py, rx, ry);
 
     //----Draw 3D walls----
+    float ca = pa - ra;
+    if (ca < 0) ca += 2 * PI;
+    if (ca > 2 * PI) ca -= 2 * PI;
+    disT = disT * cos(ca); // fix fisheye
+
     float lineH = (mapS * 320) / disT;
     if (lineH > 320) lineH = 320;
     float lineO = 160 - lineH/2;
