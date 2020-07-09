@@ -1,3 +1,4 @@
+#include <SDL2/SDL_render.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -64,7 +65,7 @@ float dist(float ax, float ay, float bx, float by, float ang)
 void draw_rays_3D()
 {
   int r, mx, my, mp, dof;
-  float rx, ry, ra, xo, yo;
+  float rx, ry, ra, xo, yo, disT;
 
   ra = pa - DR * 30;
   if (ra < 0) ra += 2 * PI;
@@ -100,11 +101,20 @@ void draw_rays_3D()
       else { rx+=xo; ry+=yo; dof+= 1; } //next line
     }
 
-    if (disH < disV) { rx = hx; ry = hy; }
-    if (disH > disV) { rx = vx; ry = vy; }
+    if (disH < disV) { rx = hx; ry = hy; disT = disH; }
+    if (disH > disV) { rx = vx; ry = vy; disT = disV; }
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderDrawLineF(renderer, px, py, rx, ry);
+
+    //----Draw 3D walls----
+    float lineH = (mapS * 320) / disT;
+    if (lineH > 320) lineH = 320;
+    float lineO = 160 - lineH/2;
+
+    SDL_Rect line_to_be_drawn = { r * 8 + 530, lineO, 8, lineH + lineO };
+    /*SDL_RenderDrawLineF(renderer, r * 8 + 530, 0, r * 8 + 530, lineH + lineO);*/
+    SDL_RenderFillRect(renderer, &line_to_be_drawn);
 
     ra += DR;
     if (ra < 0) ra += 2 * PI;
