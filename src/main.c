@@ -5,6 +5,7 @@
 #define PI 3.1415926535
 #define P2 PI/2
 #define P3 3*PI/2
+#define DR 0.01745329 //one degree in radians
 
 #include <SDL2/SDL.h>
 
@@ -65,8 +66,11 @@ void draw_rays_3D()
   int r, mx, my, mp, dof;
   float rx, ry, ra, xo, yo;
 
-  ra = pa;
-  for (r = 0; r < 1; r++)
+  ra = pa - DR * 30;
+  if (ra < 0) ra += 2 * PI;
+  if (ra > 2 * PI) ra -= 2 * PI;
+
+  for (r = 0; r < 60; r++)
   {
     //check horizontal
     dof = 0;
@@ -101,6 +105,10 @@ void draw_rays_3D()
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderDrawLineF(renderer, px, py, rx, ry);
+
+    ra += DR;
+    if (ra < 0) ra += 2 * PI;
+    if (ra > 2 * PI) ra -= 2 * PI;
   }
 }
 
