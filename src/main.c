@@ -70,6 +70,7 @@ void draw_rays_3D()
   {
     //check horizontal
     dof = 0;
+    float disH=1000000, hx = px, hy = py;
     float aTan = -1/tan(ra);
     if (ra > PI) { ry = (((int)py>>6)<<6)-0.0001; rx = (py-ry) * aTan + px; yo = -64; xo = -yo * aTan; } //looking up
     if (ra < PI) { ry = (((int)py>>6)<<6)+64;     rx = (py-ry) * aTan + px; yo = 64; xo = -yo * aTan; } //looking down
@@ -77,15 +78,13 @@ void draw_rays_3D()
     while (dof < 8)
     {
       mx = (int) (rx)>>6; my = (int) (ry)>>6; mp=my*mapX+mx;
-      if (mp > 0 && mp < mapX * mapY && map[mp] == 1) dof = 8; //hit wall
+      if (mp > 0 && mp < mapX * mapY && map[mp] == 1) { hx = rx; hy = ry; disH = dist(px, py, hx, hy, ra); dof = 8; } //hit wall
       else { rx+=xo; ry+=yo; dof+= 1; } //next line
     }
 
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_RenderDrawLineF(renderer, px, py, rx, ry);
-
     //check vertical
     dof = 0;
+    float disV=1000000, vx = px, vy = py;
     float nTan = -tan(ra);
     if (ra > P2 && ra < P3) { rx = (((int)px>>6)<<6)-0.0001; ry = (px-rx) * nTan + py; xo = -64; yo = -xo * nTan; } //looking left
     if (ra < P2 || ra > P3) { rx = (((int)px>>6)<<6)+64;     ry = (px-rx) * nTan + py; xo = 64; yo = -xo * nTan; } //looking right
@@ -93,9 +92,12 @@ void draw_rays_3D()
     while (dof < 8)
     {
       mx = (int) (rx)>>6; my = (int) (ry)>>6; mp=my*mapX+mx;
-      if (mp > 0 && mp < mapX * mapY && map[mp] == 1) dof = 8; //hit wall
+      if (mp > 0 && mp < mapX * mapY && map[mp] == 1) { vx = rx; vy = ry; disV = dist(px, py, vx, vy, ra); dof = 8; } //hit wall
       else { rx+=xo; ry+=yo; dof+= 1; } //next line
     }
+
+    if (disH < disV) { rx = hx; ry = hy; }
+    if (disH > disV) { rx = vx; ry = vy; }
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderDrawLineF(renderer, px, py, rx, ry);
