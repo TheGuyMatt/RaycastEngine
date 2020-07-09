@@ -32,7 +32,7 @@ int map[] =
 {
   1,1,1,1,1,1,1,1,
   1,0,1,0,0,0,0,1,
-  1,0,1,0,0,1,0,1,
+  1,0,1,0,0,0,0,1,
   1,0,1,0,0,0,0,1,
   1,0,0,0,0,0,0,1,
   1,0,0,0,0,1,0,1,
@@ -101,10 +101,9 @@ void draw_rays_3D()
       else { rx+=xo; ry+=yo; dof+= 1; } //next line
     }
 
-    if (disH < disV) { rx = hx; ry = hy; disT = disH; }
-    if (disH > disV) { rx = vx; ry = vy; disT = disV; }
+    if (disH < disV) { rx = hx; ry = hy; disT = disH; SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); }
+    if (disH > disV) { rx = vx; ry = vy; disT = disV; SDL_SetRenderDrawColor(renderer, 178, 0, 0, 255); }
 
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderDrawLineF(renderer, px, py, rx, ry);
 
     //----Draw 3D walls----
@@ -115,10 +114,9 @@ void draw_rays_3D()
 
     float lineH = (mapS * 320) / disT;
     if (lineH > 320) lineH = 320;
-    float lineO = 160 - lineH/2;
+    float lineO = 200 - lineH/2;
 
     SDL_Rect line_to_be_drawn = { r * 8 + 530, lineO, 8, lineH + lineO };
-    /*SDL_RenderDrawLineF(renderer, r * 8 + 530, 0, r * 8 + 530, lineH + lineO);*/
     SDL_RenderFillRect(renderer, &line_to_be_drawn);
 
     ra += DR;
