@@ -1,4 +1,4 @@
-#include <SDL2/SDL_render.h>
+/*#include <SDL2/SDL_render.h>*/
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -31,10 +31,10 @@ int mapX = 8, mapY = 8, mapS = 64;
 int map[] =
 {
   1,1,1,1,1,1,1,1,
-  1,0,1,0,0,0,0,1,
-  1,0,1,0,0,0,0,1,
-  1,0,1,0,0,0,0,1,
   1,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,1,1,
+  1,0,1,0,0,0,0,1,
+  1,0,0,0,0,0,1,1,
   1,0,0,0,0,1,0,1,
   1,0,0,0,0,0,0,1,
   1,1,1,1,1,1,1,1,
@@ -58,7 +58,8 @@ void draw_map_2D()
 
 float dist(float ax, float ay, float bx, float by, float ang)
 {
-  return ( sqrt((bx-ax) * (bx-ax) + (by-ay) * (by - ay)) );
+  /*return ( sqrt((bx-ax) * (bx-ax) + (by-ay) * (by - ay)) );*/
+  return ( pow(((bx-ax) * (bx-ax) + (by-ay) * (by - ay)), 0.5) );
 }
 
 //draw the rays
@@ -114,7 +115,7 @@ void draw_rays_3D()
 
     float lineH = (mapS * 320) / disT;
     if (lineH > 320) lineH = 320;
-    float lineO = 200 - lineH/2;
+    float lineO = 160 - lineH/2;
 
     SDL_Rect line_to_be_drawn = { r * 8 + 530, lineO, 8, lineH + lineO };
     SDL_RenderFillRect(renderer, &line_to_be_drawn);

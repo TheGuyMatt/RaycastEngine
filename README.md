@@ -5,8 +5,8 @@ I have been inspired to create this program because of Wolfenstien 3D and DOOM.
 This was inspired by [this video](https://www.youtube.com/watch?v=gYRrGTC7GtA), though I use SDL instead of glut.
 
 ## Requirements
-### Windows (Visual Studio)
-CMake expects to find the SDL2 headers and libraries in a subfolder named `extern\SDL-2.0.5`. Download [here](https://www.libsdl.org/release/SDL2-devel-2.0.5-VC.zip) and extract to the `extern` directory. Make sure the SDL2_image library is also within the `extern directory`
+### Windows
+It is a bit more difficult to get working on windows. Depending on wether you are using Visual Studio, MinGW, or another compiler the process will vary. If you are using CMake to help compile the project, you need to add two CMake variables named SDL2_DIR and SDL2_IMAGE_DIR pointing to the directories where you downloaded SDL2 and SDL2_image. After that, you need tocopy the dll files from each of the library's bin folders.
 ### MacOS (Xcode)
 Install the SDL2 and SDL2_image headers and libraries using [MacPorts](https://www.macports.org/)
 

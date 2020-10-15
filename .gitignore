@@ -1,3 +1,5 @@
 build/
+winbuild/
 .clangd/
 compile_commands.json
+extern/
